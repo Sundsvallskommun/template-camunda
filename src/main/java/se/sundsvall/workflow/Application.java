@@ -1,12 +1,12 @@
 package se.sundsvall.workflow;
 
-import org.springframework.boot.SpringApplication;
 import se.sundsvall.dept44.ServiceApplication;
+
+import static org.springframework.boot.SpringApplication.run;
 
 @ServiceApplication
 public class Application {
-
   public static void main(String... args) {
-    SpringApplication.run(Application.class, args);
+    run(Application.class, args);
   }
 }
