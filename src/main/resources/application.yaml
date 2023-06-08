@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: template-camunda
+#----------------------------------------
+# Open API
+#----------------------------------------
+openapi:
+  name: ${spring.application.name}
+  title: ${spring.application.name}
+  version: '@project.version@'
+
+#----------------------------------------
+# Camunda
+#----------------------------------------
+camunda:
+  # - bpm.client:
+  # -   subscriptions:
+      # - topicName:
+      # -  process-definition-key: key
+  autoDeploy:
+    bpmnResources: classpath*:processmodels/*.bpmn
+    dmnResources: classpath*:processmodels/*.dmn
+    formResources: classpath*:processmodels/*.form
+
+worker:
+  max:
+    retries: 3
+  retry:
+    timeout: 10
