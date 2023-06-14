@@ -1,15 +1,26 @@
 package se.sundsvall.workflow.integration.camunda.deployment;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+import se.sundsvall.workflow.Application;
 import se.sundsvall.workflow.integration.camunda.deployment.DeploymentProperties.ProcessArchive;
 
+@SpringBootTest(classes = Application.class, webEnvironment = MOCK)
+@ActiveProfiles("junit")
 class DeploymentPropertiesTest {
+
+	@Autowired
+	private DeploymentProperties deploymentProperties;
 
 	@Test
 	void testAnnotation() {
@@ -23,6 +34,31 @@ class DeploymentPropertiesTest {
 
 		assertThat(props.getProcesses())
 			.isNull();
+	}
+
+	@Test
+	void verifyExternalConfiguration() {
+		assertThat(deploymentProperties.isAutoDeployEnabled()).isFalse();
+		assertThat(deploymentProperties.getProcesses()).hasSize(2)
+			.extracting(
+				ProcessArchive::name,
+				ProcessArchive::tenant,
+				ProcessArchive::bpmnResourcePattern,
+				ProcessArchive::dmnResourcePattern,
+				ProcessArchive::formResourcePattern)
+			.containsExactlyInAnyOrder(
+				tuple(
+					"process_name_1",
+					"tenant_id_1",
+					"bpmnResourcePattern_1",
+					"dmnResourcePattern_1",
+					"formResourcePattern_1"),
+				tuple(
+					"process_name_2",
+					"tenant_id_2",
+					"bpmnResourcePattern_2",
+					"dmnResourcePattern_2",
+					"formResourcePattern_2"));
 	}
 
 	@Test
