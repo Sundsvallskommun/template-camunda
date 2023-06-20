@@ -22,3 +22,8 @@ camunda:
           dmnResourcePattern: dmnResourcePattern_2
           formResourcePattern: formResourcePattern_2
   
+integration:
+  camunda:
+    connectTimeout: 5
+    readTimeout: 20
+    url: http://replaced_by_test:8080

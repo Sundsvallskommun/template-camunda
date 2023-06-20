@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.assertj.core.api.FileAssert;
-import org.camunda.community.rest.client.api.DeploymentApi;
-import org.camunda.community.rest.client.invoker.ApiException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -30,10 +28,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import se.sundsvall.workflow.integration.camunda.api.CamundaClient;
 import se.sundsvall.workflow.integration.camunda.deployment.DeploymentProperties.ProcessArchive;
 
 @ExtendWith(MockitoExtension.class)
 class TenantAwareAutoDeploymentTest {
+
 
 	private static final String PROCESSMODEL_PATH = "processmodels/";
 	private static final String PROCESSMODEL_FILE = "template-process.bpmn";
@@ -44,7 +44,7 @@ class TenantAwareAutoDeploymentTest {
 	private static final String FILETYPE_FORM = "form";
 
 	@Mock
-	private DeploymentApi deploymentApiMock;
+	private CamundaClient deploymentApiMock;
 
 	@Mock
 	private DeploymentProperties deploymentPropertiesMock;
@@ -159,7 +159,7 @@ class TenantAwareAutoDeploymentTest {
 		verify(resourcePatternResolverMock).getResources(DEFAULT_PATTERN_PREFIX + FILETYPE_BPMN);
 		verify(resourcePatternResolverMock).getResources(DEFAULT_PATTERN_PREFIX + FILETYPE_DMN);
 		verify(resourcePatternResolverMock).getResources(DEFAULT_PATTERN_PREFIX + FILETYPE_FORM);
-		verify(deploymentApiMock).createDeployment(eq(tenant), eq(PROCESSMODEL_FILE), eq(true), eq(true), eq(deploymentName), isNull(), fileCaptor.capture());
+		verify(deploymentApiMock).deploy(eq(tenant), eq(PROCESSMODEL_FILE), eq(true), eq(true), eq(deploymentName), isNull(), fileCaptor.capture());
 
 		new FileAssert(fileCaptor.getValue()).hasSameTextualContentAs(processFile.getFile());
 	}
@@ -183,12 +183,12 @@ class TenantAwareAutoDeploymentTest {
 	@Test
 	void createDeploymentThrowsException() throws Exception {
 		final var name = "name";
-		final var originException = new ApiException("testException");
+		final var originException = new RuntimeException("testException");
 
 		when(deploymentPropertiesMock.isAutoDeployEnabled()).thenReturn(true);
 		when(deploymentPropertiesMock.getProcesses()).thenReturn(List.of(processArchiveMock));
 		when(processArchiveMock.name()).thenReturn(name);
-		when(deploymentApiMock.createDeployment(any(), any(), anyBoolean(), anyBoolean(), any(), any(), any())).thenThrow(originException);
+		when(deploymentApiMock.deploy(any(), any(), anyBoolean(), anyBoolean(), any(), any(), any())).thenThrow(originException);
 		when(resourcePatternResolverMock.getResources(DEFAULT_PATTERN_PREFIX + FILETYPE_BPMN)).thenReturn(new Resource[] { resourceMock });
 		when(resourceMock.getFilename()).thenReturn(PROCESSMODEL_FILE);
 		when(resourceMock.getInputStream()).thenReturn(new ClassPathResource(PROCESSMODEL_PATH + PROCESSMODEL_FILE).getInputStream());
@@ -196,7 +196,7 @@ class TenantAwareAutoDeploymentTest {
 		final var exception = assertThrows(DeploymentException.class, () -> tenantAwareAutoDeployment.deployCamundaResources());
 
 		verify(resourcePatternResolverMock).getResources(DEFAULT_PATTERN_PREFIX + FILETYPE_BPMN);
-		verify(deploymentApiMock).createDeployment(any(), any(), anyBoolean(), anyBoolean(), any(), any(), any());
+		verify(deploymentApiMock).deploy(any(), any(), anyBoolean(), anyBoolean(), any(), any(), any());
 		verifyNoMoreInteractions(resourcePatternResolverMock, deploymentApiMock);
 		assertThat(exception.getCause()).isEqualTo(originException);
 	}

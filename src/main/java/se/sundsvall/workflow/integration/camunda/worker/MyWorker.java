@@ -1,8 +1,5 @@
 package se.sundsvall.workflow.integration.camunda.worker;
 
-import java.util.Map;
-
-import org.apache.commons.lang3.RandomUtils;
 import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
@@ -17,9 +14,9 @@ import org.zalando.problem.Status;
 import se.sundsvall.workflow.integration.camunda.handler.FailureHandler;
 
 @Component
-@ExternalTaskSubscription("printMessage")
-public class PrintMessageWorker implements ExternalTaskHandler {
-	private static final Logger LOGGER = LoggerFactory.getLogger(PrintMessageWorker.class);
+@ExternalTaskSubscription("myWorker")
+public class MyWorker implements ExternalTaskHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MyWorker.class);
 
 	@Autowired
 	private FailureHandler failureHandler;
@@ -27,15 +24,15 @@ public class PrintMessageWorker implements ExternalTaskHandler {
 	@Override
 	public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
 		try {
-
-			if (RandomUtils.nextBoolean()) {
+			LOGGER.info("Execute My Worker");
+			if (externalTask.getBusinessKey().equals("throw_exception")) {
 				throw Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
 			}
 			LOGGER.info("Finally made it, printing some message for task with id {} and businesskey {}", externalTask.getId(), externalTask.getBusinessKey());
 
-			externalTaskService.complete(externalTask, Map.of("phase", "printMessage"));
+			externalTaskService.complete(externalTask);
 		} catch (Exception exception) {
-			LOGGER.error("Exception occured in execution of print message for task with id {} and businesskey {}", externalTask.getId(), externalTask.getBusinessKey());
+			LOGGER.error("Exception occurred in execution for task with id {} and businesskey {}", externalTask.getId(), externalTask.getBusinessKey());
 
 			failureHandler.handleException(externalTaskService, externalTask, exception.getMessage());
 		}
