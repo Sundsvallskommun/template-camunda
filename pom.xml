@@ -80,7 +80,7 @@
         <dependency>
             <groupId>org.camunda.bpm</groupId>
             <artifactId>camunda-engine</artifactId>
-            <version>7.18.0</version>
+            <version>${camunda-engine.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
