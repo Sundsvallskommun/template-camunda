@@ -18,13 +18,13 @@ public class ProcessService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessService.class);
 
-	private static final String TENANTID_TEMPLATE = "TEMPLATE_NAMESPACE";
+	private static final String TENANT_ID_TEMPLATE = "TEMPLATE_NAMESPACE";
 
 	@Autowired
 	CamundaClient client;
 
 	public String startProcess(String businessKey, String tenantId) {
-		return client.startProcessWithTenant(PROCESS_KEY, TENANTID_TEMPLATE, new StartProcessInstanceDto().businessKey(businessKey)).getId();
+		return client.startProcessWithTenant(PROCESS_KEY, TENANT_ID_TEMPLATE, new StartProcessInstanceDto().businessKey(businessKey)).getId();
 	}
 
 	public void updateProcess(String processInstanceId) {
