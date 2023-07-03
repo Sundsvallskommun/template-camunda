@@ -16,48 +16,19 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 
 import java.time.Duration;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.workflow.Application;
 import se.sundsvall.workflow.api.model.StartProcessResponse;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
 
-/**
- * Test class using testcontainer to execute the process.
- * There are a lot of resources that can be added to CamundaClient
- * to make good assertions. This test class contains a few examples.
- * See Camunda API for more details https://docs.camunda.org/rest/camunda-bpm-platform/7.19/
- */
 @WireMockAppTestSuite(files = "classpath:/CreateProcess/", classes = Application.class)
-@Testcontainers
-public class CreateProcessIT extends AbstractAppTest {
-
-	@Container
-	private static final GenericContainer<?> CAMUNDA =
-		new GenericContainer<>("camunda/camunda-bpm-platform:run-7.19.0")
-			.waitingFor(Wait.forHttp("/"))
-			.withExposedPorts(8080);
-
-	@DynamicPropertySource
-	static void registerProperties(DynamicPropertyRegistry registry) {
-		CAMUNDA.start();
-		var camundaBaseUrl = new String("http://" + "localhost:" + CAMUNDA.getMappedPort(8080) + "/engine-rest");
-		registry.add("integration.camunda.url", () -> camundaBaseUrl);
-		registry.add("camunda.bpm.client.base-url", () -> camundaBaseUrl);
-	}
+class CreateProcessIT extends AbstractCamundaAppTest {
 
 	@Autowired
 	private CamundaClient camundaClient;
@@ -71,11 +42,6 @@ public class CreateProcessIT extends AbstractAppTest {
 		await()
 			.ignoreExceptions()
 			.until(() -> camundaClient.getDeployments("template-process.bpmn", null, null).size(), equalTo(1));
-	}
-
-	@AfterAll
-	static void teardown() {
-		CAMUNDA.stop();
 	}
 
 	@Test
@@ -179,5 +145,4 @@ public class CreateProcessIT extends AbstractAppTest {
 		assertThat(incidents.get(0).getIncidentType()).isEqualTo("failedExternalTask");
 		assertThat(incidents.get(0).getActivityId()).isEqualTo("ExternalTask_MyWorker");
 	}
-
 }
