@@ -1,4 +1,4 @@
-package se.sundsvall.workflow.integration.camunda.worker;
+package se.sundsvall.workflow.businesslogic.worker;
 
 import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
-import se.sundsvall.workflow.integration.camunda.handler.FailureHandler;
+import se.sundsvall.workflow.businesslogic.handler.FailureHandler;
 
 @Component
 @ExternalTaskSubscription("myWorker")

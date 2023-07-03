@@ -1,4 +1,4 @@
-package se.sundsvall.workflow.integration.camunda.api.configuration;
+package se.sundsvall.workflow.integration.camunda.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

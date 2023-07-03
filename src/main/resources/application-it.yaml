@@ -24,14 +24,7 @@ camunda:
           bpmnResourcePattern: classpath*:processmodels/*.bpmn
           dmnResourcePattern: classpath*:processmodels/*.dmn
           formResourcePattern: classpath*:processmodels/*.form
-  worker:
-    max:
-      retries: 3
-    retry:
-      timeout: 10
   
-
-
 #----------------------------------------
 # Camunda integration settings
 #----------------------------------------

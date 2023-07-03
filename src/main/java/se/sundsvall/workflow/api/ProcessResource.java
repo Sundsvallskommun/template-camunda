@@ -27,10 +27,9 @@ import se.sundsvall.workflow.service.ProcessService;
 @RestController
 @RequestMapping("process")
 @Tag(name = "Camunda process endpoints", description = "Endpoints for starting and updating camunda processes")
-public class ProcessEndpoints {
-	private static final String TENANTID_TEMPLATE = "TEMPLATE_NAMESPACE";
+public class ProcessResource {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessEndpoints.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessResource.class);
 
 	@Autowired
 	private ProcessService service;
@@ -45,13 +44,13 @@ public class ProcessEndpoints {
 	public ResponseEntity<StartProcessResponse> startProcess(
 		@Parameter(name = "businessKey") @PathVariable final String businessKey) {
 
-		var startProcessResponse = new StartProcessResponse(service.startProcess(businessKey, TENANTID_TEMPLATE));
-		LOGGER.info("Process instance started with id: " + startProcessResponse.getProcessId());
+		var startProcessResponse = new StartProcessResponse(service.startProcess(businessKey));
+		LOGGER.info("Request for start of process has been received, resulting in an instance with id {}", startProcessResponse.getProcessId());
 		return new ResponseEntity<>(startProcessResponse, HttpStatus.ACCEPTED);
 	}
 
 	@PostMapping(path = "update/{processInstanceId}", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
-	@Operation(description = "Update a process instance matching the provided business key and phase")
+	@Operation(description = "Update a process instance matching the provided processInstanceId")
 	@ApiResponse(responseCode = "202", description = "Accepted", content = @Content(schema = @Schema(implementation = Void.class)))
 	@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = { Problem.class, ConstraintViolationProblem.class })))
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
@@ -60,6 +59,7 @@ public class ProcessEndpoints {
 	public ResponseEntity<Void> updateProcess(
 		@Parameter(name = "processInstanceId") @PathVariable final String processInstanceId) {
 
+		LOGGER.info("Request for update of process instance with id {} has been received", processInstanceId);
 		service.updateProcess(processInstanceId);
 		return new ResponseEntity<>(HttpStatus.ACCEPTED);
 	}

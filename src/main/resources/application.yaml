@@ -30,7 +30,11 @@ camunda:
       retries: 3
     retry:
       timeout: 10
-  
+
+#----------------------------------------
+# Camunda integration settings
+#----------------------------------------
+# Rest client
 integration:
   camunda:
     connectTimeout: 5

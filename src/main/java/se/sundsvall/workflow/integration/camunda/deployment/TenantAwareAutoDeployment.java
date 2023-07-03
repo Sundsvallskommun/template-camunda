@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import se.sundsvall.workflow.integration.camunda.api.CamundaClient;
+import se.sundsvall.workflow.integration.camunda.CamundaClient;
 import se.sundsvall.workflow.integration.camunda.deployment.DeploymentProperties.ProcessArchive;
 
 @Configuration

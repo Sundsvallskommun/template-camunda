@@ -1,4 +1,4 @@
-package se.sundsvall.workflow.integration.camunda.handler;
+package se.sundsvall.workflow.businesslogic.handler;
 
 import static java.util.Collections.emptyMap;
 

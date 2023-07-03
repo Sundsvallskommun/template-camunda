@@ -123,9 +123,6 @@
 				<configuration>
 					<excludes>
 						<exclude>**/se/sundsvall/workflow/Application*</exclude>
-						<exclude>**/se/sundsvall/workflow/api/*</exclude>
-                        <exclude>**/se/sundsvall/workflow/api/model/*</exclude>
-						<exclude>**/se/sundsvall/workflow/integration/camunda/handler/*</exclude>
                         <exclude>**/generated/se/sundsvall/**</exclude>
 					</excludes>
 				</configuration>
