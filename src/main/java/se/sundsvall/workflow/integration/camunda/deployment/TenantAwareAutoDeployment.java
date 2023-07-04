@@ -16,19 +16,15 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.camunda.community.rest.client.api.DeploymentApi;
-import org.camunda.community.rest.client.invoker.ApiException;
-import org.camunda.community.rest.client.springboot.CamundaProcessAutodeployment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import se.sundsvall.workflow.integration.camunda.CamundaClient;
 import se.sundsvall.workflow.integration.camunda.deployment.DeploymentProperties.ProcessArchive;
 
-@EnableAutoConfiguration(exclude = CamundaProcessAutodeployment.class)
 @Configuration
 public class TenantAwareAutoDeployment {
 
@@ -39,7 +35,7 @@ public class TenantAwareAutoDeployment {
 	private static final Resource[] NO_RESOURCES = {};
 
 	@Autowired
-	private DeploymentApi deploymentApi;
+	private CamundaClient camundaClient;
 
 	@Autowired
 	private DeploymentProperties deployments;
@@ -80,7 +76,7 @@ public class TenantAwareAutoDeployment {
 					IOUtils.copy(camundaResource.getInputStream(), out);
 				}
 
-				deploymentApi.createDeployment(
+				camundaClient.deploy(
 					processArchive.tenant(), // tenantId
 					camundaResource.getFilename(),
 					true, // changedOnly
@@ -88,7 +84,7 @@ public class TenantAwareAutoDeployment {
 					processArchive.name() + " (" + processArchive.tenant() + ") - " + camundaResource.getFilename(), // deploymentName
 					null,
 					tmpFile);
-			} catch (ApiException | IOException e) {
+			} catch (Exception e) {
 				throw new DeploymentException(e);
 			}
 		}
