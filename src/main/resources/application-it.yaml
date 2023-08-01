@@ -1,8 +1,6 @@
-server:
-  port: 8081
 spring:
   application:
-    name: template-camunda
+    name: template-camunda-it
 #----------------------------------------
 # Open API
 #----------------------------------------
@@ -14,10 +12,11 @@ openapi:
 #----------------------------------------
 # Camunda
 #----------------------------------------
+
 camunda:
   bpm:
     client:
-      base-url: http://localhost:8080/engine-rest
+      base-url: http://replaced_by_test:8080
     deployment:
       processes:
         - name: Template process
@@ -25,12 +24,7 @@ camunda:
           bpmnResourcePattern: classpath*:processmodels/*.bpmn
           dmnResourcePattern: classpath*:processmodels/*.dmn
           formResourcePattern: classpath*:processmodels/*.form
-  worker:
-    max:
-      retries: 3
-    retry:
-      timeout: 10
-
+  
 #----------------------------------------
 # Camunda integration settings
 #----------------------------------------
@@ -39,4 +33,4 @@ integration:
   camunda:
     connectTimeout: 5
     readTimeout: 20
-    url: http://localhost:8080/engine-rest
+    url: http://replaced_by_test:8080
