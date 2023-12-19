@@ -4,13 +4,12 @@
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>1.35</version>
+		<version>1.37</version>
 	</parent>
 	<groupId>se.sundsvall.workflow</groupId>
 	<artifactId>template-camunda</artifactId>
 	<version>0.1</version>
 	<name>template-camunda</name>
-
 	<properties>
 		<!-- Pipeline properties -->
 		<docker.image.name>ms-template-camunda</docker.image.name>
@@ -25,7 +24,6 @@
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<generated-sources-java-path>src/main/java</generated-sources-java-path>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
@@ -37,14 +35,12 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-
 		<!--Camunda dependencies-->
 		<dependency>
 			<groupId>org.camunda.bpm.springboot</groupId>
 			<artifactId>camunda-bpm-spring-boot-starter-external-task-client</artifactId>
 			<version>${camunda-external-task-client.version}</version>
 		</dependency>
-
 		<!-- Test -->
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
