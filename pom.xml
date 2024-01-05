@@ -94,7 +94,7 @@
 						<configuration>
 							<inputSpec>src/main/resources/integrations/camunda-openapi.json</inputSpec>
 							<output>${generated-sources-path}</output>
-							<generatorName>jaxrs-spec</generatorName>
+							<generatorName>spring</generatorName>
 							<generateApis>false</generateApis>
 							<generateSupportingFiles>false</generateSupportingFiles>
 							<configOptions>
