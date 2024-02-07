@@ -12,16 +12,14 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import jakarta.annotation.PostConstruct;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
 import se.sundsvall.workflow.integration.camunda.deployment.DeploymentProperties.ProcessArchive;
 
@@ -34,17 +32,18 @@ public class TenantAwareAutoDeployment {
 	private static final String FILETYPE_FORM = "form";
 	private static final Resource[] NO_RESOURCES = {};
 
-	@Autowired
-	private CamundaClient camundaClient;
-
-	@Autowired
-	private DeploymentProperties deployments;
-
-	@Autowired
-	private ResourcePatternResolver patternResolver;
+	private final CamundaClient camundaClient;
+	private final DeploymentProperties deployments;
+	private final ResourcePatternResolver patternResolver;
 
 	@Value("${spring.application.name:spring-app}")
 	private String applicationName;
+
+	public TenantAwareAutoDeployment(CamundaClient camundaClient, DeploymentProperties deployments, ResourcePatternResolver patternResolver) {
+		this.camundaClient = camundaClient;
+		this.deployments = deployments;
+		this.patternResolver = patternResolver;
+	}
 
 	@PostConstruct
 	public void deployCamundaResources() {
@@ -63,13 +62,13 @@ public class TenantAwareAutoDeployment {
 		// Validate that name is present
 		requireNotBlank(processArchive.name(), "Processname must be set");
 
-		for (Resource camundaResource : resourcesToDeploy) {
+		for (final Resource camundaResource : resourcesToDeploy) {
 			try {
 				// We have to create a tmpFile because we need to read the files via InputStream to work also in a jar-packed
 				// environment but the OpenAPI will need a File. We still have to set the file ending correct in the temp file
 				// (because otherwise the deployer will not pick it up as e.g. BPMN file)
-				String tmpDirectoryName = FileUtils.getTempDirectory().getAbsolutePath();
-				String filename = getResourceFilename(camundaResource, type);
+				final String tmpDirectoryName = FileUtils.getTempDirectory().getAbsolutePath();
+				final String filename = getResourceFilename(camundaResource, type);
 				final File tmpFile = new File(tmpDirectoryName + File.separator + filename);
 				tmpFile.deleteOnExit();
 				try (FileOutputStream out = new FileOutputStream(tmpFile)) {
@@ -84,7 +83,7 @@ public class TenantAwareAutoDeployment {
 					processArchive.name() + " (" + processArchive.tenant() + ") - " + camundaResource.getFilename(), // deploymentName
 					null,
 					tmpFile);
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				throw new DeploymentException(e);
 			}
 		}
@@ -93,7 +92,7 @@ public class TenantAwareAutoDeployment {
 	private List<Resource> getResources(String path) {
 		try {
 			return Arrays.asList(ofNullable(patternResolver.getResources(path)).orElse(NO_RESOURCES));
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new DeploymentException(e);
 		}
 	}
@@ -101,8 +100,7 @@ public class TenantAwareAutoDeployment {
 	private String getResourceFilename(Resource camundaResource, String type) throws IOException {
 		if (camundaResource.getFilename() != null) {
 			return camundaResource.getFilename();
-		} else {
-			return md5DigestAsHex(camundaResource.getInputStream()) + '.' + type;
 		}
+		return md5DigestAsHex(camundaResource.getInputStream()) + '.' + type;
 	}
 }

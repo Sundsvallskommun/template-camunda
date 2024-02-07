@@ -12,10 +12,10 @@ import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import se.sundsvall.workflow.businesslogic.handler.FailureHandler;
+import se.sundsvall.workflow.integration.camunda.CamundaClient;
 
 @Component
 @ExternalTaskSubscription("checkData")
@@ -24,8 +24,12 @@ public class CheckDataWorker extends AbstractWorker implements ExternalTaskHandl
 	private static final Logger LOGGER = LoggerFactory.getLogger(CheckDataWorker.class);
 	private static final String DATA_MISSING = "dataMissing";
 
-	@Autowired
-	private FailureHandler failureHandler;
+	private final FailureHandler failureHandler;
+
+	public CheckDataWorker(FailureHandler failureHandler, CamundaClient camundaClient) {
+		super(camundaClient);
+		this.failureHandler = failureHandler;
+	}
 
 	@Override
 	public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
@@ -35,20 +39,21 @@ public class CheckDataWorker extends AbstractWorker implements ExternalTaskHandl
 			// 1.Clear updateAvailable. This should always be done first
 			clearUpdateAvailable(externalTask);
 
-			// 2. Fetch data from datasource. (In this template the source is process variables, but in a real process this would be a integration call)
+			// 2. Fetch data from datasource. (In this template the source is process variables, but in a real process this would be
+			// a integration call)
 			Integer updateCounter = externalTask.getVariable("updateCounter");
 			LOGGER.info("updateCounter: {}", updateCounter);
 
 			// 3. Check if it is ok to move to the next task (no data is missing).
-			Map<String, Object> processVariables = new HashMap<>();
-			if(externalTask.getBusinessKey().equals("will_need_two_updates")){
-				if(updateCounter == null) {
+			final Map<String, Object> processVariables = new HashMap<>();
+			if ("will_need_two_updates".equals(externalTask.getBusinessKey())) {
+				if (updateCounter == null) {
 					updateCounter = 1;
 				} else {
 					updateCounter = updateCounter + 1;
 				}
 
-				if(updateCounter <= 2) { // data is missing
+				if (updateCounter <= 2) { // data is missing
 					LOGGER.info("More updates will be needed");
 					processVariables.put(DATA_MISSING, TRUE);
 				} else {
@@ -62,7 +67,7 @@ public class CheckDataWorker extends AbstractWorker implements ExternalTaskHandl
 			// 4. Complete
 			processVariables.put("updateCounter", updateCounter);
 			externalTaskService.complete(externalTask, processVariables);
-		} catch (Exception exception) {
+		} catch (final Exception exception) {
 			LOGGER.error("Exception occurred in execution for task with id {} and businesskey {}", externalTask.getId(), externalTask.getBusinessKey());
 
 			failureHandler.handleException(externalTaskService, externalTask, exception.getMessage());
