@@ -42,6 +42,8 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 		await()
 			.ignoreExceptions()
 			.until(() -> camundaClient.getDeployments("template-process.bpmn", null, null).size(), equalTo(1));
+
+		verifyAllStubs();
 	}
 
 	@Test
@@ -52,7 +54,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 			.withServicePath("/process/start/businessKey")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
-			.sendRequestAndVerifyResponse()
+			.sendRequest()
 			.andReturnBody(StartProcessResponse.class);
 
 		await()
@@ -62,6 +64,8 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 		assertThat(camundaClient.getHistoricExternalTaskLog(startResponse.getProcessId(), "ExternalTask_MyWorker", false, true, false)).hasSize(1);
 		// ExternalTask_CheckData has been executed 1 time
 		assertThat(camundaClient.getHistoricExternalTaskLog(startResponse.getProcessId(), "ExternalTask_CheckData", false, true, false)).hasSize(1);
+
+		verifyAllStubs();
 	}
 
 	@Test
@@ -72,7 +76,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 			.withServicePath("/process/start/will_need_two_updates")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
-			.sendRequestAndVerifyResponse()
+			.sendRequest()
 			.andReturnBody(StartProcessResponse.class);
 
 		// Wait for process to start
@@ -91,7 +95,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 			.withServicePath("/process/update/" + startResponse.getProcessId())
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
-			.sendRequestAndVerifyResponse();
+			.sendRequest();
 
 		// Wait for process to execute worker
 		await()
@@ -109,29 +113,30 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 			.withServicePath("/process/update/" + startResponse.getProcessId())
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
-			.sendRequestAndVerifyResponse();
+			.sendRequest();
 
 		// Wait for process to complete
 		await()
 			.atMost(30, SECONDS)
 			.until(() -> camundaClient.getHistoricProcessInstance(startResponse.getProcessId()).getState(), equalTo(COMPLETED));
 
-
 		// ExternalTask_MyWorker has been executed 1 time
 		assertThat(camundaClient.getHistoricExternalTaskLog(startResponse.getProcessId(), "ExternalTask_MyWorker", false, true, false)).hasSize(1);
 		// ExternalTask_CheckData has been executed 3 time
 		assertThat(camundaClient.getHistoricExternalTaskLog(startResponse.getProcessId(), "ExternalTask_CheckData", false, true, false)).hasSize(3);
 
+		verifyAllStubs();
 	}
 
 	@Test
-	void test003_testMyWorkerThrowsException()  throws JsonProcessingException, ClassNotFoundException {
+	void test003_testMyWorkerThrowsException() throws JsonProcessingException, ClassNotFoundException {
+
 		// === Start process ===
 		final var startResponse = setupCall()
 			.withServicePath("/process/start/throw_exception")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
-			.sendRequestAndVerifyResponse()
+			.sendRequest()
 			.andReturnBody(StartProcessResponse.class);
 
 		// Wait for 4 failure (1 ordinary and 3 retries)
@@ -140,9 +145,11 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 			.ignoreExceptions()
 			.until(() -> camundaClient.getHistoricExternalTaskLog(startResponse.getProcessId(), "ExternalTask_MyWorker", false, false, true).size(), equalTo(4));
 
-		var incidents = camundaClient.getHistoricIncidents(startResponse.getProcessId());
+		final var incidents = camundaClient.getHistoricIncidents(startResponse.getProcessId());
 		assertThat(incidents).hasSize(1);
 		assertThat(incidents.get(0).getIncidentType()).isEqualTo("failedExternalTask");
 		assertThat(incidents.get(0).getActivityId()).isEqualTo("ExternalTask_MyWorker");
+
+		verifyAllStubs();
 	}
 }

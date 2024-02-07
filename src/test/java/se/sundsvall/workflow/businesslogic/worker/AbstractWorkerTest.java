@@ -20,7 +20,11 @@ import se.sundsvall.workflow.integration.camunda.CamundaClient;
 @ExtendWith(MockitoExtension.class)
 class AbstractWorkerTest {
 
-	private static class Worker extends AbstractWorker {} // Test class extending the abstract class containing the clearUpdateAvailable method
+	private static class Worker extends AbstractWorker {
+		protected Worker(CamundaClient camundaClient) {
+			super(camundaClient);
+		}
+	} // Test class extending the abstract class containing the clearUpdateAvailable method
 
 	@Mock
 	private CamundaClient camundaClientMock;

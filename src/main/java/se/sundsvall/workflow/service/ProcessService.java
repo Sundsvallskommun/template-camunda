@@ -5,7 +5,6 @@ import static se.sundsvall.workflow.Constants.TENANTID_TEMPLATE;
 import static se.sundsvall.workflow.Constants.TRUE;
 import static se.sundsvall.workflow.Constants.UPDATE_AVAILABLE;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import generated.se.sundsvall.camunda.StartProcessInstanceDto;
@@ -14,14 +13,17 @@ import se.sundsvall.workflow.integration.camunda.CamundaClient;
 @Service
 public class ProcessService {
 
-	@Autowired
-	private CamundaClient client;
+	private final CamundaClient camundaClient;
+
+	public ProcessService(CamundaClient camundaClient) {
+		this.camundaClient = camundaClient;
+	}
 
 	public String startProcess(String businessKey) {
-		return client.startProcessWithTenant(PROCESS_KEY, TENANTID_TEMPLATE, new StartProcessInstanceDto().businessKey(businessKey)).getId();
+		return camundaClient.startProcessWithTenant(PROCESS_KEY, TENANTID_TEMPLATE, new StartProcessInstanceDto().businessKey(businessKey)).getId();
 	}
 
 	public void updateProcess(String processInstanceId) {
-		client.setProcessInstanceVariable(processInstanceId, UPDATE_AVAILABLE, TRUE);
+		camundaClient.setProcessInstanceVariable(processInstanceId, UPDATE_AVAILABLE, TRUE);
 	}
 }
