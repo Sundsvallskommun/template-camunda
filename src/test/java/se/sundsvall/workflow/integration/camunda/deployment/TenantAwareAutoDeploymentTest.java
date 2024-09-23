@@ -104,7 +104,7 @@ class TenantAwareAutoDeploymentTest {
 	}
 
 	@Test
-	void autoDeployEnabledWithDefinedProcessAndDefaultPathPatternsButNoNameSet() throws Exception {
+	void autoDeployEnabledWithDefinedProcessAndDefaultPathPatternsButNoNameSet() {
 		when(deploymentPropertiesMock.isAutoDeployEnabled()).thenReturn(true);
 		when(deploymentPropertiesMock.getProcesses()).thenReturn(List.of(processArchiveMock));
 
