@@ -1,10 +1,9 @@
 package se.sundsvall.workflow.businesslogic.worker;
 
+import static java.util.UUID.randomUUID;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-
-import java.util.UUID;
 
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.engine.variable.type.ValueType;
@@ -38,7 +37,7 @@ class AbstractWorkerTest {
 	@Test
 	void clearUpdateAvailable() {
 		// Setup
-		final var uuid = UUID.randomUUID().toString();
+		final var uuid = randomUUID().toString();
 		final var key = "updateAvailable";
 		final var value = new VariableValueDto().type(ValueType.BOOLEAN.getName()).value(false);
 
