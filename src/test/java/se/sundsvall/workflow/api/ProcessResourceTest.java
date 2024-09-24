@@ -1,5 +1,6 @@
 package se.sundsvall.workflow.api;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -7,7 +8,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-import java.util.UUID;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ import se.sundsvall.workflow.service.ProcessService;
 @ActiveProfiles("junit")
 class ProcessResourceTest {
 
+	private static final String START_PATH = "/{municipalityId}/process/start/{businessKey}";
+	private static final String UPDATE_PATH = "/{municipalityId}/process/update/{processInstanceId}";
+
 	@MockBean
 	private ProcessService processServiceMock;
 
@@ -36,15 +40,18 @@ class ProcessResourceTest {
 
 	@Test
 	void startProcess() {
-		// Setup
-		final var businessKey = "businessKey";
-		final var uuid = UUID.randomUUID().toString();
 
-		// Mock
-		when(processServiceMock.startProcess(any())).thenReturn(uuid);
+		// Arrange
+		final var municipalityId = "2281";
+		final var businessKey = "businessKey";
+		final var processInstanceId = randomUUID().toString();
+
+		when(processServiceMock.startProcess(any())).thenReturn(processInstanceId);
 
 		// Act
-		final var response = webTestClient.post().uri("/process/start/" + businessKey)
+		final var response = webTestClient.post()
+			.uri(builder -> builder.path(START_PATH)
+				.build(Map.of("municipalityId", municipalityId, "businessKey", businessKey)))
 			.exchange()
 			.expectStatus().isAccepted()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -52,28 +59,31 @@ class ProcessResourceTest {
 			.returnResult()
 			.getResponseBody();
 
-		// Assert and verify
-		assertThat(response.getProcessId()).isEqualTo(uuid);
+		// Assert
+		assertThat(response.getProcessId()).isEqualTo(processInstanceId);
 		verify(processServiceMock).startProcess(businessKey);
 		verifyNoMoreInteractions(processServiceMock);
 	}
 
 	@Test
 	void updateProcess() {
-		// Setup
-		final var uuid = UUID.randomUUID().toString();
 
-		// Mock
-		when(processServiceMock.startProcess(any())).thenReturn(uuid);
+		// Arrange
+		final var municipalityId = "2281";
+		final var processInstanceId = randomUUID().toString();
+
+		when(processServiceMock.startProcess(any())).thenReturn(processInstanceId);
 
 		// Act
-		webTestClient.post().uri("/process/update/" + uuid)
+		webTestClient.post()
+			.uri(builder -> builder.path(UPDATE_PATH)
+				.build(Map.of("municipalityId", municipalityId, "processInstanceId", processInstanceId)))
 			.exchange()
 			.expectStatus().isAccepted()
 			.expectBody().isEmpty();
 
-		// Assert and verify
-		verify(processServiceMock).updateProcess(uuid);
+		// Assert
+		verify(processServiceMock).updateProcess(processInstanceId);
 		verifyNoMoreInteractions(processServiceMock);
 	}
 }

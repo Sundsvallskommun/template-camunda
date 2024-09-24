@@ -51,7 +51,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		// === Start process ===
 		final var startResponse = setupCall()
-			.withServicePath("/process/start/businessKey")
+			.withServicePath("/2281/process/start/businessKey")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest()
@@ -73,7 +73,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		// === Start process ===
 		final var startResponse = setupCall()
-			.withServicePath("/process/start/will_need_two_updates")
+			.withServicePath("/2281/process/start/will_need_two_updates")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest()
@@ -92,7 +92,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		// === Update process first time ===
 		setupCall()
-			.withServicePath("/process/update/" + startResponse.getProcessId())
+			.withServicePath("/2281/process/update/" + startResponse.getProcessId())
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest();
@@ -110,7 +110,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		// === Update process second time ===
 		setupCall()
-			.withServicePath("/process/update/" + startResponse.getProcessId())
+			.withServicePath("/2281/process/update/" + startResponse.getProcessId())
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest();
@@ -133,7 +133,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		// === Start process ===
 		final var startResponse = setupCall()
-			.withServicePath("/process/start/throw_exception")
+			.withServicePath("/2281/process/start/throw_exception")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest()
