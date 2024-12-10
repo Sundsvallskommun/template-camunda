@@ -5,7 +5,6 @@ import static java.lang.Boolean.TRUE;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.client.task.ExternalTaskHandler;
@@ -13,7 +12,6 @@ import org.camunda.bpm.client.task.ExternalTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import se.sundsvall.workflow.businesslogic.handler.FailureHandler;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
 

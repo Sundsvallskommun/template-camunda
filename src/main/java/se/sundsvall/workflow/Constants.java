@@ -1,8 +1,7 @@
 package se.sundsvall.workflow;
 
-import org.camunda.bpm.engine.variable.type.ValueType;
-
 import generated.se.sundsvall.camunda.VariableValueDto;
+import org.camunda.bpm.engine.variable.type.ValueType;
 
 public class Constants {
 
