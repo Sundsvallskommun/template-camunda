@@ -1,5 +1,9 @@
 package se.sundsvall.workflow.integration.camunda;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+import static se.sundsvall.workflow.integration.camunda.configuration.CamundaConfiguration.CLIENT_ID;
+
 import generated.se.sundsvall.camunda.ActivityInstanceDto;
 import generated.se.sundsvall.camunda.DeploymentDto;
 import generated.se.sundsvall.camunda.DeploymentWithDefinitionsDto;
@@ -10,23 +14,17 @@ import generated.se.sundsvall.camunda.ProcessInstanceDto;
 import generated.se.sundsvall.camunda.ProcessInstanceWithVariablesDto;
 import generated.se.sundsvall.camunda.StartProcessInstanceDto;
 import generated.se.sundsvall.camunda.VariableValueDto;
-import se.sundsvall.workflow.integration.camunda.configuration.CamundaConfiguration;
-
+import java.io.File;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Map;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.io.File;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Map;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
-import static se.sundsvall.workflow.integration.camunda.configuration.CamundaConfiguration.CLIENT_ID;
+import se.sundsvall.workflow.integration.camunda.configuration.CamundaConfiguration;
 
 @FeignClient(name = CLIENT_ID, url = "${integration.camunda.url}", configuration = CamundaConfiguration.class)
 public interface CamundaClient {

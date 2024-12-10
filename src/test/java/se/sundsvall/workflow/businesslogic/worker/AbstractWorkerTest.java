@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import generated.se.sundsvall.camunda.VariableValueDto;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.engine.variable.type.ValueType;
 import org.junit.jupiter.api.Test;
@@ -12,8 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import generated.se.sundsvall.camunda.VariableValueDto;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
 
 @ExtendWith(MockitoExtension.class)

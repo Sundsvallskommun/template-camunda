@@ -5,9 +5,8 @@ import static se.sundsvall.workflow.Constants.TENANTID_TEMPLATE;
 import static se.sundsvall.workflow.Constants.TRUE;
 import static se.sundsvall.workflow.Constants.UPDATE_AVAILABLE;
 
-import org.springframework.stereotype.Service;
-
 import generated.se.sundsvall.camunda.StartProcessInstanceDto;
+import org.springframework.stereotype.Service;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
 
 @Service
