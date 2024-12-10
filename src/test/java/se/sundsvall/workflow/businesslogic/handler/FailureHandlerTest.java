@@ -13,7 +13,7 @@ import org.camunda.bpm.client.task.ExternalTaskService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import se.sundsvall.workflow.Application;
@@ -25,10 +25,10 @@ class FailureHandlerTest {
 	@Autowired
 	private FailureHandler failureHandler;
 
-	@MockBean
+	@MockitoBean
 	private ExternalTaskService externalTaskServiceMock;
 
-	@MockBean
+	@MockitoBean
 	private ExternalTask externalTaskMock;
 
 	@Test

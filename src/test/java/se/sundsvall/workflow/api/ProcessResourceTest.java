@@ -13,7 +13,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -29,7 +29,7 @@ class ProcessResourceTest {
 	private static final String START_PATH = "/{municipalityId}/process/start/{businessKey}";
 	private static final String UPDATE_PATH = "/{municipalityId}/process/update/{processInstanceId}";
 
-	@MockBean
+	@MockitoBean
 	private ProcessService processServiceMock;
 
 	@Autowired
