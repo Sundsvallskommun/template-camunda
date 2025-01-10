@@ -19,6 +19,7 @@ import java.io.File;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.workflow.integration.camunda.configuration.CamundaConfiguration;
 
-@FeignClient(name = CLIENT_ID, url = "${integration.camunda.url}", configuration = CamundaConfiguration.class)
+@FeignClient(name = CLIENT_ID, url = "${integration.camunda.url}", configuration = CamundaConfiguration.class, dismiss404 = true)
 @CircuitBreaker(name = CLIENT_ID)
 public interface CamundaClient {
 
@@ -54,7 +55,7 @@ public interface CamundaClient {
 	List<DeploymentDto> getDeployments(@RequestParam("source") String source, @RequestParam("name") String name, @RequestParam("tenantIdIn") String tenantIdIn);
 
 	@GetMapping(path = "process-instance/{id}", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
-	ProcessInstanceDto getProcessInstance(@PathVariable("id") String id);
+	Optional<ProcessInstanceDto> getProcessInstance(@PathVariable("id") String id);
 
 	@GetMapping(path = "process-instance/{id}/activity-instances", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE)
 	ActivityInstanceDto getProcessActivityInstance(@PathVariable("id") String id);

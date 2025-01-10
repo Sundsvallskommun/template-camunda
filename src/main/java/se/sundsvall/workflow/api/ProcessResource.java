@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import se.sundsvall.workflow.service.ProcessService;
 @RestController
 @RequestMapping("/{municipalityId}/process")
 @Tag(name = "Camunda process endpoints", description = "Endpoints for starting and updating camunda processes")
+@Validated
 class ProcessResource {
 
 	private final ProcessService service;

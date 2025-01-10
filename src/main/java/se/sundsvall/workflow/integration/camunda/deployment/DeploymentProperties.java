@@ -26,6 +26,5 @@ public class DeploymentProperties {
 		this.processes = processes;
 	}
 
-	public static record ProcessArchive(String name, String tenant, String bpmnResourcePattern, String dmnResourcePattern, String formResourcePattern) {
-	}
+	public static record ProcessArchive(String name, String tenant, String bpmnResourcePattern, String dmnResourcePattern, String formResourcePattern) {}
 }
