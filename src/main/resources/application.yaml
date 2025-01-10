@@ -40,3 +40,11 @@ integration:
     connectTimeout: 5
     readTimeout: 20
     url: http://localhost:8080/engine-rest
+
+#----------------------------------------
+# Circuit breakers
+#----------------------------------------
+resilience4j.circuitbreaker:
+  instances:
+    camunda:
+      ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
