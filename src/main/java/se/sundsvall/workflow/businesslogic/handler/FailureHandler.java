@@ -18,7 +18,7 @@ public class FailureHandler {
 	@Value("${camunda.worker.retry.timeout}")
 	private long retryTimeout;
 
-	public void handleException(ExternalTaskService externalTaskService, ExternalTask externalTask, String message) {
+	public void handleException(final ExternalTaskService externalTaskService, final ExternalTask externalTask, final String message) {
 		externalTaskService.handleFailure(externalTask.getId(), externalTask.getWorkerId(),
 			message,
 			calculateRetries(externalTask),

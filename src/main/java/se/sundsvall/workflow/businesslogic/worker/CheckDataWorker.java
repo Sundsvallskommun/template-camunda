@@ -24,13 +24,13 @@ public class CheckDataWorker extends AbstractWorker implements ExternalTaskHandl
 
 	private final FailureHandler failureHandler;
 
-	public CheckDataWorker(FailureHandler failureHandler, CamundaClient camundaClient) {
+	public CheckDataWorker(final FailureHandler failureHandler, final CamundaClient camundaClient) {
 		super(camundaClient);
 		this.failureHandler = failureHandler;
 	}
 
 	@Override
-	public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
+	public void execute(final ExternalTask externalTask, final ExternalTaskService externalTaskService) {
 		try {
 			LOGGER.info("Execute Check data");
 

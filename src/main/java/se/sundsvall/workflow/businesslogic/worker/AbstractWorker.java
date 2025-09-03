@@ -10,11 +10,11 @@ abstract class AbstractWorker {
 
 	private final CamundaClient camundaClient;
 
-	protected AbstractWorker(CamundaClient camundaClient) {
+	protected AbstractWorker(final CamundaClient camundaClient) {
 		this.camundaClient = camundaClient;
 	}
 
-	protected void clearUpdateAvailable(ExternalTask externalTask) {
+	protected void clearUpdateAvailable(final ExternalTask externalTask) {
 		/*
 		 * Clearing process variable has to be a blocking operation.
 		 * Using ExternalTaskService.setVariables() will not work without creating race conditions.

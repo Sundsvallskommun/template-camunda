@@ -18,6 +18,10 @@ camunda:
   bpm:
     client:
       base-url: http://localhost:8080/engine-rest
+      backoff:
+        initTime: 500
+        factor: 2
+        maxTime: 15000
     deployment:
       processes:
         - name: Template process
