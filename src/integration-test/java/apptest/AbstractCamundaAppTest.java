@@ -26,7 +26,7 @@ abstract class AbstractCamundaAppTest extends AbstractAppTest {
 		.withExposedPorts(8080);
 
 	@DynamicPropertySource
-	static void registerProperties(DynamicPropertyRegistry registry) {
+	static void registerProperties(final DynamicPropertyRegistry registry) {
 		CAMUNDA.start();
 		final var camundaBaseUrl = ("http://" + "localhost:" + CAMUNDA.getMappedPort(8080) + "/engine-rest");
 		registry.add("integration.camunda.url", () -> camundaBaseUrl);

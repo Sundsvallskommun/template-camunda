@@ -21,12 +21,12 @@ public class StartProcessResponse {
 		return processId;
 	}
 
-	public void setProcessId(String processId) {
+	public void setProcessId(final String processId) {
 		this.processId = processId;
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}

@@ -13,7 +13,7 @@ public class CamundaConfiguration {
 	public static final String CLIENT_ID = "camunda";
 
 	@Bean
-	FeignBuilderCustomizer feignBuilderCustomizer(CamundaProperties camundaProperties) {
+	FeignBuilderCustomizer feignBuilderCustomizer(final CamundaProperties camundaProperties) {
 		return FeignMultiCustomizer.create()
 			.withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID))
 			.withRequestTimeoutsInSeconds(camundaProperties.connectTimeout(), camundaProperties.readTimeout())

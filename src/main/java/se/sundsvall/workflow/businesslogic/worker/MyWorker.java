@@ -19,12 +19,12 @@ public class MyWorker implements ExternalTaskHandler {
 
 	private final FailureHandler failureHandler;
 
-	public MyWorker(FailureHandler failureHandler) {
+	public MyWorker(final FailureHandler failureHandler) {
 		this.failureHandler = failureHandler;
 	}
 
 	@Override
-	public void execute(ExternalTask externalTask, ExternalTaskService externalTaskService) {
+	public void execute(final ExternalTask externalTask, final ExternalTaskService externalTaskService) {
 		try {
 			LOGGER.info("Execute My Worker");
 			if ("throw_exception".equals(externalTask.getBusinessKey())) {

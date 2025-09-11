@@ -2,7 +2,6 @@ package se.sundsvall.workflow.api;
 
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -24,8 +23,8 @@ import se.sundsvall.workflow.service.ProcessService;
 @ActiveProfiles("junit")
 class ProcessResourceTest {
 
-	private static final String START_PATH = "/{municipalityId}/process/start/{businessKey}";
-	private static final String UPDATE_PATH = "/{municipalityId}/process/update/{processInstanceId}";
+	private static final String START_PATH = "/{municipalityId}/{namespace}/process/start/{businessKey}";
+	private static final String UPDATE_PATH = "/{municipalityId}/{namespace}/process/update/{processInstanceId}";
 
 	@MockitoBean
 	private ProcessService processServiceMock;
@@ -41,15 +40,16 @@ class ProcessResourceTest {
 
 		// Arrange
 		final var municipalityId = "2281";
+		final var namespace = "TEMPLATE_NAMESPACE";
 		final var businessKey = "businessKey";
 		final var processInstanceId = randomUUID().toString();
 
-		when(processServiceMock.startProcess(any())).thenReturn(processInstanceId);
+		when(processServiceMock.startProcess(municipalityId, namespace, businessKey)).thenReturn(processInstanceId);
 
 		// Act
 		final var response = webTestClient.post()
 			.uri(builder -> builder.path(START_PATH)
-				.build(Map.of("municipalityId", municipalityId, "businessKey", businessKey)))
+				.build(Map.of("municipalityId", municipalityId, "namespace", namespace, "businessKey", businessKey)))
 			.exchange()
 			.expectStatus().isAccepted()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -59,7 +59,7 @@ class ProcessResourceTest {
 
 		// Assert
 		assertThat(response.getProcessId()).isEqualTo(processInstanceId);
-		verify(processServiceMock).startProcess(businessKey);
+		verify(processServiceMock).startProcess(municipalityId, namespace, businessKey);
 		verifyNoMoreInteractions(processServiceMock);
 	}
 
@@ -68,20 +68,22 @@ class ProcessResourceTest {
 
 		// Arrange
 		final var municipalityId = "2281";
+		final var namespace = "TEMPLATE_NAMESPACE";
+		final var businessKey = "businessKey";
 		final var processInstanceId = randomUUID().toString();
 
-		when(processServiceMock.startProcess(any())).thenReturn(processInstanceId);
+		when(processServiceMock.startProcess(municipalityId, namespace, businessKey)).thenReturn(processInstanceId);
 
 		// Act
 		webTestClient.post()
 			.uri(builder -> builder.path(UPDATE_PATH)
-				.build(Map.of("municipalityId", municipalityId, "processInstanceId", processInstanceId)))
+				.build(Map.of("municipalityId", municipalityId, "namespace", namespace, "processInstanceId", processInstanceId)))
 			.exchange()
 			.expectStatus().isAccepted()
 			.expectBody().isEmpty();
 
 		// Assert
-		verify(processServiceMock).updateProcess(processInstanceId);
+		verify(processServiceMock).updateProcess(municipalityId, namespace, processInstanceId);
 		verifyNoMoreInteractions(processServiceMock);
 	}
 }

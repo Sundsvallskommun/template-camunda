@@ -51,7 +51,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		// === Start process ===
 		final var startResponse = setupCall()
-			.withServicePath("/2281/process/start/businessKey")
+			.withServicePath("/2281/TEMPLATE_NAMESPACE/process/start/businessKey")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest()
@@ -73,7 +73,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		// === Start process ===
 		final var startResponse = setupCall()
-			.withServicePath("/2281/process/start/will_need_two_updates")
+			.withServicePath("/2281/TEMPLATE_NAMESPACE/process/start/will_need_two_updates")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest()
@@ -86,13 +86,13 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		// Wait for process to be in state "Update Available?"
 		await()
-			.until(() -> camundaClient.getProcessActivityInstance(startResponse.getProcessId()).getChildActivityInstances().get(0).getActivityName(), equalTo("Update Available?"));
+			.until(() -> camundaClient.getProcessActivityInstance(startResponse.getProcessId()).getChildActivityInstances().getFirst().getActivityName(), equalTo("Update Available?"));
 
 		assertThat(camundaClient.getHistoricExternalTaskLog(startResponse.getProcessId(), "ExternalTask_CheckData", false, true, false)).hasSize(1);
 
 		// === Update process first time ===
 		setupCall()
-			.withServicePath("/2281/process/update/" + startResponse.getProcessId())
+			.withServicePath("/2281/TEMPLATE_NAMESPACE/process/update/" + startResponse.getProcessId())
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest();
@@ -104,13 +104,13 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 		// Wait for process to be in state "Update Available?"
 		await()
 			.atMost(30, SECONDS)
-			.until(() -> camundaClient.getProcessActivityInstance(startResponse.getProcessId()).getChildActivityInstances().get(0).getActivityName(), equalTo("Update Available?"));
+			.until(() -> camundaClient.getProcessActivityInstance(startResponse.getProcessId()).getChildActivityInstances().getFirst().getActivityName(), equalTo("Update Available?"));
 
 		assertThat(camundaClient.getHistoricExternalTaskLog(startResponse.getProcessId(), "ExternalTask_CheckData", false, true, false)).hasSize(2);
 
 		// === Update process second time ===
 		setupCall()
-			.withServicePath("/2281/process/update/" + startResponse.getProcessId())
+			.withServicePath("/2281/TEMPLATE_NAMESPACE/process/update/" + startResponse.getProcessId())
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest();
@@ -133,7 +133,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		// === Start process ===
 		final var startResponse = setupCall()
-			.withServicePath("/2281/process/start/throw_exception")
+			.withServicePath("/2281/TEMPLATE_NAMESPACE/process/start/throw_exception")
 			.withHttpMethod(POST)
 			.withExpectedResponseStatus(ACCEPTED)
 			.sendRequest()
@@ -147,8 +147,8 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 
 		final var incidents = camundaClient.getHistoricIncidents(startResponse.getProcessId());
 		assertThat(incidents).hasSize(1);
-		assertThat(incidents.get(0).getIncidentType()).isEqualTo("failedExternalTask");
-		assertThat(incidents.get(0).getActivityId()).isEqualTo("ExternalTask_MyWorker");
+		assertThat(incidents.getFirst().getIncidentType()).isEqualTo("failedExternalTask");
+		assertThat(incidents.getFirst().getActivityId()).isEqualTo("ExternalTask_MyWorker");
 
 		verifyAllStubs();
 	}

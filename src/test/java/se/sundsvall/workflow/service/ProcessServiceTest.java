@@ -5,18 +5,18 @@ import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import generated.se.sundsvall.camunda.PatchVariablesDto;
 import generated.se.sundsvall.camunda.ProcessInstanceDto;
 import generated.se.sundsvall.camunda.ProcessInstanceWithVariablesDto;
 import generated.se.sundsvall.camunda.StartProcessInstanceDto;
-import generated.se.sundsvall.camunda.VariableValueDto;
 import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.camunda.bpm.engine.variable.type.ValueType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,6 +41,8 @@ class ProcessServiceTest {
 		// Arrange
 		final var process = "template-camunda-process";
 		final var tenant = "TEMPLATE_NAMESPACE";
+		final var municipalityId = "municipalityId";
+		final var namespace = "TEMPLATE_NAMESPACE";
 		final var businessKey = RandomStringUtils.secure().next(10);
 		final var uuid = randomUUID().toString();
 		final var processInstance = new ProcessInstanceWithVariablesDto().id(uuid);
@@ -48,11 +50,11 @@ class ProcessServiceTest {
 		when(camundaClientMock.startProcessWithTenant(any(), any(), any())).thenReturn(processInstance);
 
 		// Act
-		final var processId = processService.startProcess(businessKey);
+		final var processId = processService.startProcess(municipalityId, namespace, businessKey);
 
 		// Assert
 		assertThat(processId).isEqualTo(uuid);
-		verify(camundaClientMock).startProcessWithTenant(process, tenant, new StartProcessInstanceDto().businessKey(businessKey));
+		verify(camundaClientMock).startProcessWithTenant(eq(process), eq(tenant), any(StartProcessInstanceDto.class));
 		verifyNoMoreInteractions(camundaClientMock);
 	}
 
@@ -60,18 +62,18 @@ class ProcessServiceTest {
 	void updateProcess() {
 
 		// Arrange
+		final var municipalityId = "municipalityId";
+		final var namespace = "TEMPLATE_NAMESPACE";
 		final var uuid = randomUUID().toString();
-		final var key = "updateAvailable";
-		final var value = new VariableValueDto().type(ValueType.BOOLEAN.getName()).value(true);
 
 		when(camundaClientMock.getProcessInstance(any())).thenReturn(Optional.of(new ProcessInstanceDto()));
 
 		// Act
-		processService.updateProcess(uuid);
+		processService.updateProcess(municipalityId, namespace, uuid);
 
 		// Assert
 		verify(camundaClientMock).getProcessInstance(uuid);
-		verify(camundaClientMock).setProcessInstanceVariable(uuid, key, value);
+		verify(camundaClientMock).setProcessInstanceVariables(eq(uuid), any(PatchVariablesDto.class));
 		verifyNoMoreInteractions(camundaClientMock);
 	}
 
@@ -79,12 +81,14 @@ class ProcessServiceTest {
 	void updateProcessNotFound() {
 
 		// Arrange
+		final var municipalityId = "municipalityId";
+		final var namespace = "TEMPLATE_NAMESPACE";
 		final var uuid = randomUUID().toString();
 
 		when(camundaClientMock.getProcessInstance(any())).thenReturn(empty());
 
 		// Act
-		final var result = assertThrows(ThrowableProblem.class, () -> processService.updateProcess(uuid));
+		final var result = assertThrows(ThrowableProblem.class, () -> processService.updateProcess(municipalityId, namespace, uuid));
 
 		// Assert
 		assertThat(result)
