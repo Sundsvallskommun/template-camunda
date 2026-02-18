@@ -1,8 +1,5 @@
 package se.sundsvall.workflow.businesslogic.worker;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-
 import java.util.HashMap;
 import java.util.Map;
 import org.camunda.bpm.client.spring.annotation.ExternalTaskSubscription;
@@ -14,6 +11,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import se.sundsvall.workflow.businesslogic.handler.FailureHandler;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 @Component
 @ExternalTaskSubscription("checkData")

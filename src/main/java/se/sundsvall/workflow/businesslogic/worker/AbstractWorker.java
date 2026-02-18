@@ -1,10 +1,10 @@
 package se.sundsvall.workflow.businesslogic.worker;
 
-import static se.sundsvall.workflow.Constants.FALSE;
-import static se.sundsvall.workflow.Constants.UPDATE_AVAILABLE;
-
 import org.camunda.bpm.client.task.ExternalTask;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
+
+import static se.sundsvall.workflow.Constants.FALSE;
+import static se.sundsvall.workflow.Constants.UPDATE_AVAILABLE;
 
 abstract class AbstractWorker {
 

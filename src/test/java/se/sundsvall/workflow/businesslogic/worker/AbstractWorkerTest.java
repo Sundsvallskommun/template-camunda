@@ -1,10 +1,5 @@
 package se.sundsvall.workflow.businesslogic.worker;
 
-import static java.util.UUID.randomUUID;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import generated.se.sundsvall.camunda.VariableValueDto;
 import org.camunda.bpm.client.task.ExternalTask;
 import org.camunda.bpm.engine.variable.type.ValueType;
@@ -14,6 +9,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
+
+import static java.util.UUID.randomUUID;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AbstractWorkerTest {
