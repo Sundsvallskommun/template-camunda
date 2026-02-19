@@ -1,16 +1,5 @@
 package se.sundsvall.workflow.service;
 
-import static java.util.Optional.empty;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import generated.se.sundsvall.camunda.PatchVariablesDto;
 import generated.se.sundsvall.camunda.ProcessInstanceDto;
 import generated.se.sundsvall.camunda.ProcessInstanceWithVariablesDto;
@@ -25,6 +14,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.Status;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
+
+import static java.util.Optional.empty;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProcessServiceTest {

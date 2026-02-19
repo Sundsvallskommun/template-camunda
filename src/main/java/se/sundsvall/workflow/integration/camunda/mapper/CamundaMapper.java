@@ -1,15 +1,15 @@
 package se.sundsvall.workflow.integration.camunda.mapper;
 
-import static se.sundsvall.workflow.Constants.CAMUNDA_VARIABLE_MUNICIPALITY_ID;
-import static se.sundsvall.workflow.Constants.CAMUNDA_VARIABLE_NAMESPACE;
-import static se.sundsvall.workflow.Constants.CAMUNDA_VARIABLE_REQUEST_ID;
-
 import generated.se.sundsvall.camunda.PatchVariablesDto;
 import generated.se.sundsvall.camunda.StartProcessInstanceDto;
 import generated.se.sundsvall.camunda.VariableValueDto;
 import java.util.Map;
 import org.camunda.bpm.engine.variable.type.ValueType;
 import se.sundsvall.dept44.requestid.RequestId;
+
+import static se.sundsvall.workflow.Constants.CAMUNDA_VARIABLE_MUNICIPALITY_ID;
+import static se.sundsvall.workflow.Constants.CAMUNDA_VARIABLE_NAMESPACE;
+import static se.sundsvall.workflow.Constants.CAMUNDA_VARIABLE_REQUEST_ID;
 
 public final class CamundaMapper {
 
