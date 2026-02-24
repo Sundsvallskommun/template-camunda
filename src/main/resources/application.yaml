@@ -51,4 +51,4 @@ integration:
 resilience4j.circuitbreaker:
   instances:
     camunda:
-      ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
+      ignoreExceptions: feign.FeignException

@@ -1,6 +1,9 @@
 spring:
   application:
     name: template-camunda-it
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
 #----------------------------------------
 # Open API
 #----------------------------------------

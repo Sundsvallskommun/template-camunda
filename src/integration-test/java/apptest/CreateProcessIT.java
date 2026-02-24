@@ -20,8 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.workflow.Application;
 import se.sundsvall.workflow.api.model.StartProcessResponse;
@@ -47,7 +45,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 	}
 
 	@Test
-	void test001_createProcessWithoutUpdates() throws JsonProcessingException, ClassNotFoundException {
+	void test001_createProcessWithoutUpdates() throws ClassNotFoundException {
 
 		// === Start process ===
 		final var startResponse = setupCall()
@@ -69,7 +67,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 	}
 
 	@Test
-	void test002_createProcessWithTwoUpdates() throws JsonProcessingException, ClassNotFoundException {
+	void test002_createProcessWithTwoUpdates() throws ClassNotFoundException {
 
 		// === Start process ===
 		final var startResponse = setupCall()
@@ -129,7 +127,7 @@ class CreateProcessIT extends AbstractCamundaAppTest {
 	}
 
 	@Test
-	void test003_testMyWorkerThrowsException() throws JsonProcessingException, ClassNotFoundException {
+	void test003_testMyWorkerThrowsException() throws ClassNotFoundException {
 
 		// === Start process ===
 		final var startResponse = setupCall()
