@@ -6,9 +6,9 @@ import org.camunda.bpm.client.task.ExternalTaskHandler;
 import org.camunda.bpm.client.task.ExternalTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.workflow.businesslogic.handler.FailureHandler;
 
 @Component
@@ -28,7 +28,7 @@ public class MyWorker implements ExternalTaskHandler {
 		try {
 			LOGGER.info("Execute My Worker");
 			if ("throw_exception".equals(externalTask.getBusinessKey())) {
-				throw Problem.valueOf(Status.I_AM_A_TEAPOT, "Big and stout");
+				throw Problem.valueOf(HttpStatus.I_AM_A_TEAPOT, "Big and stout");
 			}
 			LOGGER.info("Finally made it, printing some message for task with id {} and businesskey {}", externalTask.getId(), externalTask.getBusinessKey());
 

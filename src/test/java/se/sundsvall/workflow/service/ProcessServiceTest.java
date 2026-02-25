@@ -11,8 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.zalando.problem.Status;
-import org.zalando.problem.ThrowableProblem;
+import org.springframework.http.HttpStatus;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.workflow.integration.camunda.CamundaClient;
 
 import static java.util.Optional.empty;
@@ -92,7 +92,7 @@ class ProcessServiceTest {
 
 		// Assert
 		assertThat(result)
-			.hasFieldOrPropertyWithValue("status", Status.NOT_FOUND)
+			.hasFieldOrPropertyWithValue("status", HttpStatus.NOT_FOUND)
 			.hasFieldOrPropertyWithValue("detail", "Process instance with ID '%s' does not exist!".formatted(uuid));
 
 		verify(camundaClientMock).getProcessInstance(uuid);

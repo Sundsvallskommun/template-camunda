@@ -1,6 +1,10 @@
 #========================================
 # Unit test specific settings
 #========================================
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
 #----------------------------------------
 # Camunda
 #----------------------------------------
