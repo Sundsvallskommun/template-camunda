@@ -1,5 +1,14 @@
 package apptest;
 
+import java.time.Duration;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
+import se.sundsvall.workflow.Application;
+import se.sundsvall.workflow.api.model.StartProcessResponse;
+import se.sundsvall.workflow.integration.camunda.CamundaClient;
+
 import static generated.se.sundsvall.camunda.HistoricProcessInstanceDto.StateEnum.ACTIVE;
 import static generated.se.sundsvall.camunda.HistoricProcessInstanceDto.StateEnum.COMPLETED;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -13,17 +22,6 @@ import static org.awaitility.Awaitility.setDefaultTimeout;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.ACCEPTED;
-
-import java.time.Duration;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
-import se.sundsvall.workflow.Application;
-import se.sundsvall.workflow.api.model.StartProcessResponse;
-import se.sundsvall.workflow.integration.camunda.CamundaClient;
 
 @WireMockAppTestSuite(files = "classpath:/CreateProcess/", classes = Application.class)
 class CreateProcessIT extends AbstractCamundaAppTest {
